@@ -46,6 +46,7 @@ func createMovies(w http.ResponseWriter, r *http.Request) {
 	var movie Movie
 	_ = json.NewDecoder(r.Body).Decode(&movie)
 	movie.ID = strconv.Itoa(rand.Intn(1000))
+	movies = append(movies, movie)
 }
 
 func updateMovies(w http.ResponseWriter, r *http.Request) {

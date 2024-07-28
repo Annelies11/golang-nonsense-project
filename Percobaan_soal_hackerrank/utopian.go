@@ -12,6 +12,7 @@ func main() {
 		} else {
 			res = res * 2
 		}
-		fmt.Println(i, "==", res)
+		// fmt.Println(i, "==", res)
 	}
+	
 }
