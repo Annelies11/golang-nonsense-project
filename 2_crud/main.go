@@ -45,13 +45,25 @@ func createMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var movie Movie
 	_ = json.NewDecoder(r.Body).Decode(&movie)
-	movie.ID = strconv.Itoa(rand.Intn(1000))
+	movie.ID = strconv.Itoa(rand.Intn(100000))
 	movies = append(movies, movie)
+	json.NewEncoder(w).Encode(movie)
 }
 
 func updateMovies(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(movies)
+	params := mux.Vars(r)
+	for i, item := range movies {
+		if item.ID == params["id"] {
+			movies = append(movies[:i], movies[i+1:]...)
+			var movie Movie
+			_ = json.NewDecoder(r.Body).Decode(&movie)
+			movie.ID = params["id"]
+			movies = append(movies, movie)
+			json.NewEncoder(w).Encode(movie)
+			return
+		}
+	}
 }
 
 func deleteMovies(w http.ResponseWriter, r *http.Request) {
@@ -75,8 +87,8 @@ func main() {
 	r.HandleFunc("/movies", getMovies).Methods("GET")
 	r.HandleFunc("/movies/{id}", getMovie).Methods("GET")
 	r.HandleFunc("/movies", createMovies).Methods("POST")
-	r.HandleFunc("/movies", updateMovies).Methods("PUT")
-	r.HandleFunc("/movies", deleteMovies).Methods("DELETE")
+	r.HandleFunc("/movies/{id}", updateMovies).Methods("PUT")
+	r.HandleFunc("/movies/{id}", deleteMovies).Methods("DELETE")
 
 	fmt.Printf("Starting port at 8000\n")
 	log.Fatal(http.ListenAndServe(":8000", r))
