@@ -4,8 +4,9 @@ import (
 	"fmt"
 )
 
+// Pelajari lagi
 func main() {
-	c := []int32{0, 0, 0, 0, 1, 0} // 32
+	c := []int32{0, 0, 0, 0, 1, 0} // 3
 	var res int32 = 0
 	i := 0
 	for i < len(c)-1 {
